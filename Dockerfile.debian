@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1.7
+FROM python:3.11-slim-bookworm
+
+# Install system deps, Chromium, fonts
+RUN apt-get update && apt-get install -y --no-install-recommends     chromium     chromium-common     chromium-driver     fonts-liberation     libasound2     libatk-bridge2.0-0     libatk1.0-0     libatspi2.0-0     libdrm2     libgbm1     libgtk-3-0     libnss3     libx11-6     libx11-xcb1     libxcomposite1     libxdamage1     libxext6     libxfixes3     libxkbcommon0     libxrandr2     ca-certificates     curl     git     && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m appuser
+USER appuser
+
+WORKDIR /app
+
+# Copy and install Python deps
+COPY --chown=appuser:appuser requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files (docs + app when added)
+COPY --chown=appuser:appuser . /app
+
+# Environment
+ENV BROWSER_EXECUTABLE_PATH=/usr/bin/chromium     PYTHONUNBUFFERED=1     PIP_DISABLE_PIP_VERSION_CHECK=1     FLASK_APP=app/flaskapp/app.py     FLASK_ENV=development
+
+# Default command: start Flask (override in docker-compose for worker)
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

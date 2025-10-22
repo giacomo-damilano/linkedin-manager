@@ -1,0 +1,109 @@
+{
+  "generated_on": "2025-10-22",
+  "project": "LinkedIn Profile Sync Agent",
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Repository Bootstrap & CI",
+      "duration_days": 2,
+      "deliverables": [
+        "Project skeleton and docs",
+        "Pre-commit, ruff, black, mypy, pytest baseline",
+        "Dockerfile.debian + docker-compose.yml",
+        "Flask skeleton app and CLI placeholders"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "M2",
+      "title": "Data Model & JSON Schemas",
+      "duration_days": 3,
+      "deliverables": [
+        "Pydantic models for modules",
+        "JSON Schemas for headline, about, experience, education, skills",
+        "Validation CLI and Flask endpoints"
+      ],
+      "dependencies": [
+        "M1"
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Selector Registry & Browser Adapter",
+      "duration_days": 5,
+      "deliverables": [
+        "SelectorRegistry with placeholders",
+        "Pyppeteer wrapper (launch, context, screenshots, tracing)",
+        "Login flow with 2FA pause and health checks"
+      ],
+      "dependencies": [
+        "M1"
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Planner & Runner (Headline, About)",
+      "duration_days": 6,
+      "deliverables": [
+        "Plan/Step/Action data model",
+        "Runner with retry/backoff and logs",
+        "Implement Headline + About end-to-end (dry-run & apply)"
+      ],
+      "dependencies": [
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Experience & Education Modules",
+      "duration_days": 8,
+      "deliverables": [
+        "Experience editor (add/update/remove)",
+        "Education editor (add/update/remove)",
+        "Verification steps and screenshots"
+      ],
+      "dependencies": [
+        "M4"
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Skills & Certifications Modules",
+      "duration_days": 5,
+      "deliverables": [
+        "Skills add/remove/endoresement sync (as supported)",
+        "Certifications add/update/remove"
+      ],
+      "dependencies": [
+        "M5"
+      ]
+    },
+    {
+      "id": "M7",
+      "title": "Flask UI polish & GitOps",
+      "duration_days": 5,
+      "deliverables": [
+        "Version management (branches/tags) via GitPython",
+        "Web editors with JSON validation",
+        "Run console with live logs & screenshots"
+      ],
+      "dependencies": [
+        "M4"
+      ]
+    },
+    {
+      "id": "M8",
+      "title": "Live State Retrieval (Optional)",
+      "duration_days": 6,
+      "deliverables": [
+        "Scrape current profile state into JSON",
+        "Three-way diff planning (local vs live)"
+      ],
+      "dependencies": [
+        "M5",
+        "M6"
+      ]
+    }
+  ]
+}

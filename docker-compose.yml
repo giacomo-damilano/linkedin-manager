@@ -1,0 +1,42 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.debian
+    container_name: lpsa_web
+    ports:
+      - "8000:8000"
+    environment:
+      - LINKEDIN_EMAIL=${LINKEDIN_EMAIL}
+      - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
+      - HEADLESS=${HEADLESS:-true}
+      - BROWSER_EXECUTABLE_PATH=${BROWSER_EXECUTABLE_PATH:-/usr/bin/chromium}
+      - DATA_DIR=${DATA_DIR:-/app/data/profiles/default}
+      - GIT_REMOTE=${GIT_REMOTE:-origin}
+      - SLOWMO_MS=${SLOWMO_MS:-0}
+      - ACTION_TIMEOUT_MS=${ACTION_TIMEOUT_MS:-8000}
+      - NAV_TIMEOUT_MS=${NAV_TIMEOUT_MS:-15000}
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.debian
+    container_name: lpsa_worker
+    environment:
+      - LINKEDIN_EMAIL=${LINKEDIN_EMAIL}
+      - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
+      - HEADLESS=${HEADLESS:-true}
+      - BROWSER_EXECUTABLE_PATH=${BROWSER_EXECUTABLE_PATH:-/usr/bin/chromium}
+      - DATA_DIR=${DATA_DIR:-/app/data/profiles/default}
+      - GIT_REMOTE=${GIT_REMOTE:-origin}
+      - SLOWMO_MS=${SLOWMO_MS:-0}
+      - ACTION_TIMEOUT_MS=${ACTION_TIMEOUT_MS:-8000}
+      - NAV_TIMEOUT_MS=${NAV_TIMEOUT_MS:-15000}
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    command: ["python", "-m", "agent.cli", "sync", "apply", "--module", "headline", "--confirm"]
